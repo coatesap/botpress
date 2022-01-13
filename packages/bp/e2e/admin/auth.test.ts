@@ -105,6 +105,8 @@ describe('Auth UI', () => {
     const rebootResp = await axios.post(`${bpConfig.apiHost}/api/v2/admin/management/rebootServer`, undefined, headers)
     expect(rebootResp.status).toEqual(200)
 
+    await page.waitForTimeout(2000)
+
     await waitForHost(bpConfig.apiHost)
     await page.goto(`${bpConfig.host}`)
 

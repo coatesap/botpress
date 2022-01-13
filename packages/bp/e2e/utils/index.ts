@@ -221,14 +221,16 @@ export const waitForHost = async (host: string, options?: WaitOptions) => {
       }
 
       // Should be Okay since jest uses an internal timeout
-      for (let i = 0; i < 10; i++) {
+      while (true) {
+        console.log('hello world')
         axios
-          .options(host, { timeout: waitTime })
-          .then(() => {
-            clearTimeout(waitHandle)
-            timeoutHandle && clearTimeout(timeoutHandle)
-
-            return resolve(undefined)
+          .get(`${host}/status`, { timeout: waitTime })
+          .then(({ data }) => {
+            if (data.botpress === 'up') {
+              clearTimeout(waitHandle)
+              timeoutHandle && clearTimeout(timeoutHandle)
+              return resolve(undefined)
+            }
           })
           .catch(() => {
             // Silently fail
